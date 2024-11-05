@@ -13,9 +13,10 @@
         </thead>
         <tbody>
             <tr v-for="coche in coches" :key="coche">
-                <td>{{ coches.marca }}</td>
-                <td>{{ coches.modelo }}</td>
-                <td>{{ coches.conductor }}</td>
+                <td>{{ coche.marca }}</td>
+                <td>{{ coche.modelo }}</td>
+                <td>{{ coche.conductor }}</td>
+                <td><img :src="coche.imagen" style="height: 90px; width: 120px;"></td>
             </tr>
         </tbody>
     </table>
@@ -23,8 +24,9 @@
 </template>
 
 <script>
-import Global from '@/Global';
+import ServiceCoches from '@/services/ServiceCoches';
 
+const service=new ServiceCoches();
 
 export default {
     name:"CochesComponent",
@@ -34,24 +36,11 @@ export default {
         }
     },
     mounted(){
-        this.fetchData();
+       service.getCoches().then(result=>{
+        this.coches=result;
+       })
     },
-    methods:{
-        fetchData(){
-            let request='api/coches';
-            let url=Global.urlApiCoches+request;
-            fetch(url,{
-                method:"GET"
-            }).then((response)=>{
-                response.json().then((data)=>{
-                    this.coches=data
-                    console.log(data);
-                    console.log(this.coches.values.array);
-                })
-                
-            })
-        }
-    }
+    
 }
 </script>
 
